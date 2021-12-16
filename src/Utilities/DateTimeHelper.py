@@ -45,6 +45,15 @@ def datetime_unifier_1(data_Series: pd.Series) -> pd.Series:
         .tz_convert(None)
 
 
+# def resample_mean(df: pd.DataFrame, Column: str, freq: str = '1H') -> pd.DataFrame:
+#     """
+#     :param df:
+#     :param Column:
+#     :param freq:
+#     :return:
+#     """
+#     return df.groupby(df[Column].floor(freq)).mean()
+
 def resample_mean(df: pd.DataFrame, Column: str, freq: str = '1H') -> pd.DataFrame:
     """
     :param df:
@@ -52,4 +61,6 @@ def resample_mean(df: pd.DataFrame, Column: str, freq: str = '1H') -> pd.DataFra
     :param freq:
     :return:
     """
-    return df.groupby(df[Column].floor(freq)).mean()
+    assert df.index.inferred_type == 'datetime64', "must have a datetime index"
+    resampled_index = df.index.floor(freq)
+    return df[Column].groupby(resampled_index).mean()
